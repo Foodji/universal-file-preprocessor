@@ -1,6 +1,6 @@
 # ufpp
 
-UFPP is an universal file preprocessor.
+UFPP is a universal file preprocessor.
 
 
 ## Installation
