@@ -1,7 +1,7 @@
 {
 	"name": "ufpp",
 	"description": "UFPP is a universal file preprocessor.",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"author": "Foodji",
 	"repository": "https://github.com/Foodji/ufpp",
 	"license": "Apache-2.0",
@@ -12,7 +12,9 @@
 		"ufpp": "bin/ufpp"
 	},
 	"preferGlobal": true,
-	"dependencies": {},
+	"dependencies": {
+		"node-getopt": "~0.2.3"
+	},
 	"files": [
 		"ufpp.js",
 		"bin"
