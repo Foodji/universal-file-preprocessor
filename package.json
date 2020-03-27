@@ -1,7 +1,7 @@
 {
 	"name": "ufpp",
 	"description": "UFPP is a universal file preprocessor.",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"author": "Foodji",
 	"repository": "https://github.com/Foodji/ufpp",
 	"license": "Apache-2.0",

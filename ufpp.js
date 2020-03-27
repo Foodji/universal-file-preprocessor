@@ -2,6 +2,7 @@ const Readline = require('readline');
 const FS = require('fs');
 const GetOpt = require("node-getopt");
 const OS = require("os");
+const CP = require("child_process");
 
 var parsedArgs = GetOpt.create([
     ["o", "customargs=ARG+", "custom arguments"]
@@ -16,6 +17,16 @@ var customArgs = {};
 const commands = {
     "file-read": function (args, options) {
         var body = FS.readFileSync(args.file).toString().split("\n");
+        if (args.indent === 'true') {
+            body = body.map(function (s, idx) {
+                return (idx > 0 ? Array(options.indent + 1).join(" ") : "") + s;
+            });
+        }
+        return body.join("\n");
+    },
+    "command-run": function (args, options) {
+        var cmd = args.cmd + " " + args.arg1;
+        var body = CP.execSync(cmd).toString().split("\n");
         if (args.indent === 'true') {
             body = body.map(function (s, idx) {
                 return (idx > 0 ? Array(options.indent + 1).join(" ") : "") + s;
