@@ -1,15 +1,20 @@
 const Readline = require('readline');
 const FS = require('fs');
-const GetOpt = require("node-getopt");
+const { program } = require("commander");
 const OS = require("os");
+const Template = require('lodash.template');
 const CP = require("child_process");
 
-var parsedArgs = GetOpt.create([
-    ["o", "customargs=ARG+", "custom arguments"]
-]).bindHelp().parseSystem();
+program
+    .option("-o, --customarg <arg...>", "custom argument")
+    .option("-t, --template", "evaluate as template");
+
+program.parse(process.argv);
+const parsedArgs = program.opts();
+
 
 var customArgs = {};
-(parsedArgs.options.customargs || []).forEach(function (keyvalue) {
+(parsedArgs.customarg || []).forEach(function (keyvalue) {
     var splt = keyvalue.split(":");
     customArgs[splt.shift()] = splt.join(":");
 });
@@ -79,21 +84,29 @@ const rl = Readline.createInterface({
     terminal: false
 });
 
-rl.on('line', function(line) {
-    line = line + "\n";
-    while (true) {
-        const startIdx = line.indexOf("{{");
-        if (startIdx === -1)
-            break;
-        const endIdx = line.indexOf("}}");
-        if (endIdx < startIdx)
-            break;
-        const head = line.substring(0, startIdx);
-        const tail = line.substring(endIdx + 2);
-        const dynamic = line.substring(startIdx + 2, endIdx);
-        line = head + execute(dynamic, {
-            indent: head.length
-        }) + tail;
-    }
-    process.stdout.write(line);
-});
+if (parsedArgs.template) {
+    const lines = [];
+    rl.on('line', line => lines.push(line));
+    rl.on('close', function () {
+        process.stdout.write(Template(lines.join("\n"))(customArgs));
+    });
+} else {
+    rl.on('line', function(line) {
+        line = line + "\n";
+        while (true) {
+            const startIdx = line.indexOf("{{");
+            if (startIdx === -1)
+                break;
+            const endIdx = line.indexOf("}}");
+            if (endIdx < startIdx)
+                break;
+            const head = line.substring(0, startIdx);
+            const tail = line.substring(endIdx + 2);
+            const dynamic = line.substring(startIdx + 2, endIdx);
+            line = head + execute(dynamic, {
+                indent: head.length
+            }) + tail;
+        }
+        process.stdout.write(line);
+    });
+}

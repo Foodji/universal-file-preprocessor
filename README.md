@@ -11,12 +11,6 @@ UFPP is a universal file preprocessor.
 ```
 
 
-## Contributors
-
-- Foodji
-- Oliver Friedmann
-
-
 ## License
 
 Apache-2.0
